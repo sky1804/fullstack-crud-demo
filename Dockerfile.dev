@@ -1,0 +1,18 @@
+# Dockerfile.dev
+FROM ubuntu:22.04
+
+# Evita prompts interativos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Atualiza e instala Node.js + npm + utilitários
+RUN apt-get update && \
+    apt-get install -y curl git nano && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Cria usuário não-root para desenvolvimento
+RUN useradd -ms /bin/bash devuser
+USER devuser
+WORKDIR /home/devuser/app
